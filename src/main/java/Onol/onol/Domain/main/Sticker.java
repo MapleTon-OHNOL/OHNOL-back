@@ -1,4 +1,4 @@
-package Onol.onol.Domain;
+package Onol.onol.Domain.main;
 
 import Onol.onol.Domain.auth.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
