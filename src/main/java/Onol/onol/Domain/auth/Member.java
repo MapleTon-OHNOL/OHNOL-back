@@ -1,6 +1,7 @@
 package Onol.onol.Domain.auth;
 
 import Onol.onol.DTO.member.MemberUpdateDTO;
+import Onol.onol.Domain.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -45,14 +46,18 @@ public class Member {
             inverseJoinColumns = {@JoinColumn(name="authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities = new HashSet<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<Message> messages = new ArrayList<>();
 
     @Builder
-    public Member(String username, String email, String password, boolean activated, Set<Authority> authorities) {
+    public Member(String username, String email, String password, boolean activated, Set<Authority> authorities,
+                  List<Message> messages) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.activated = activated;
         this.authorities = authorities;
+        this.messages = messages;
     }
 
     public void addAuthority(Authority authority){
