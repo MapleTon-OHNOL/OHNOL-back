@@ -3,6 +3,7 @@ package Onol.onol.Controller;
 import Onol.onol.DTO.jwt.TokenDTO;
 import Onol.onol.DTO.jwt.TokenReqDTO;
 import Onol.onol.DTO.login.LoginReqDTO;
+import Onol.onol.DTO.member.MemberIdentifierReqDTO;
 import Onol.onol.DTO.member.MemberReqDTO;
 import Onol.onol.DTO.member.MemberRespDTO;
 import Onol.onol.Service.AuthService;
@@ -36,6 +37,16 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Authorization") String bearerToken){
         return authService.logout(bearerToken);
+    }
+
+    @PostMapping("/info")
+    public MemberRespDTO info(@RequestHeader("Authorization") String bearerToken){
+        return authService.getInfo(bearerToken);
+    }
+
+    @PostMapping("/memberInfo")
+    public MemberRespDTO infoByIdentifier(@RequestBody MemberIdentifierReqDTO memberIdentifierReqDTO){
+        return authService.infoByIdentifier(memberIdentifierReqDTO);
     }
 
 }

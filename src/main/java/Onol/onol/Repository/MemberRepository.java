@@ -55,4 +55,16 @@ public class MemberRepository{
             return false;
         }
     }
+
+    public Optional<Member> findByIdentifier(String identifier){
+        try{
+            Member member = em
+                    .createQuery("select m from Member m where m.identifier = :identifier", Member.class)
+                    .setParameter("identifier", identifier)
+                    .getSingleResult();
+            return Optional.of(member);
+        }catch (NoResultException e){
+            throw new BizException(MemberExceptionType.NOT_FOUND_USER);
+        }
+    }
 }

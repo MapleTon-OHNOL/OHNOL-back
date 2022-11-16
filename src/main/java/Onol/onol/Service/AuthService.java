@@ -3,6 +3,7 @@ package Onol.onol.Service;
 import Onol.onol.DTO.jwt.TokenDTO;
 import Onol.onol.DTO.jwt.TokenReqDTO;
 import Onol.onol.DTO.login.LoginReqDTO;
+import Onol.onol.DTO.member.MemberIdentifierReqDTO;
 import Onol.onol.DTO.member.MemberReqDTO;
 import Onol.onol.DTO.member.MemberRespDTO;
 import Onol.onol.Domain.auth.Authority;
@@ -32,6 +33,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 @Slf4j
@@ -55,6 +57,27 @@ public class AuthService {
         return null;
     }
 
+    /**
+     * 랜덤한 문자열을 원하는 길이만큼 반환합니다.
+     *
+     * @param length 문자열 길이
+     * @return 랜덤문자열
+     */
+    private static String getRandomString(int length)
+    {
+        StringBuffer buffer = new StringBuffer();
+        Random random = new Random();
+
+        String chars[] =
+    "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9".split(",");
+
+        for (int i=0 ; i<length ; i++)
+        {
+            buffer.append(chars[random.nextInt(chars.length)]);
+        }
+        return buffer.toString();
+    }
+
     @Transactional
     public MemberRespDTO signup(MemberReqDTO memberRequestDto) {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
@@ -68,8 +91,10 @@ public class AuthService {
         Set<Authority> set = new HashSet<>();
         set.add(authority);
 
+        String identifier = getRandomString(8);
 
         Member member = memberRequestDto.toMember(passwordEncoder, set);
+        member.setIdentifier(identifier);
         log.debug("member = {}",member);
         return MemberRespDTO.of(memberRepository.saveMember(member));
     }
@@ -163,4 +188,23 @@ public class AuthService {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    public MemberRespDTO getInfo(String bearerToken){
+        String accessToken = resolveToken(bearerToken);
+
+        String email = tokenProvider.getMemberEmailByToken(accessToken);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BizException(MemberExceptionType.NOT_FOUND_USER));
+
+        return MemberRespDTO.of(member);
+    }
+
+    public MemberRespDTO infoByIdentifier(MemberIdentifierReqDTO memberIdentifierReqDTO) {
+        String identifier = memberIdentifierReqDTO.getIdentifier();
+
+        Member member = memberRepository.findByIdentifier(identifier)
+                .orElseThrow(()-> new BizException(MemberExceptionType.NOT_FOUND_USER));
+
+        return MemberRespDTO.of(member);
+
+    }
 }

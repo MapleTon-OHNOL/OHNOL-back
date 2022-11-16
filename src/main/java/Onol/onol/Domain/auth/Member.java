@@ -4,6 +4,8 @@ import Onol.onol.DTO.member.MemberUpdateDTO;
 import Onol.onol.Domain.main.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @Entity
+@DynamicInsert
 public class Member {
 
     @Id
@@ -47,6 +50,11 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
+
+    private String identifier;
+
+    @ColumnDefault("0")
+    private Integer messageCount = 0;
 
     @Builder
     public Member(String username, String email, String password, boolean activated, Set<Authority> authorities) {
@@ -86,4 +94,9 @@ public class Member {
                     .collect(Collectors.toSet());
         }
     }
+
+    public void setIdentifier(String identifier){
+        this.identifier = identifier;
+    }
+
 }

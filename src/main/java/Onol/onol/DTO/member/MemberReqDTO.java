@@ -5,6 +5,7 @@ import Onol.onol.Domain.auth.Member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
