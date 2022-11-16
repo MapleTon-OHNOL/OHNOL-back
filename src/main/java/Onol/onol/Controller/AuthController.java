@@ -29,17 +29,13 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    public TokenDTO reissue(@RequestHeader("Authorization") String accessToken, @RequestHeader("refresh-token") String refreshToken) {
-        return authService.reissue(new TokenReqDTO(accessToken.substring(7), refreshToken));
+    public TokenDTO reissue(@RequestHeader("Authorization") String bearerToken, @RequestHeader("refresh-token") String refreshToken) {
+        return authService.reissue(new TokenReqDTO(bearerToken, refreshToken));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity logout(@RequestHeader("Authorization") String accessToken){
-        return authService.logout(accessToken.substring(7));
+    public ResponseEntity logout(@RequestHeader("Authorization") String bearerToken){
+        return authService.logout(bearerToken);
     }
 
-    @PostMapping("/info")
-    public MemberRespDTO info(@RequestHeader("Authorization") String accessToken){
-        return authService.getInfo(accessToken.substring(7));
-    }
 }

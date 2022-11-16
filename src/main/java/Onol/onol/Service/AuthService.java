@@ -14,6 +14,7 @@ import Onol.onol.ExceptionHandler.BizException;
 import Onol.onol.ExceptionHandler.JwtExceptionType;
 import Onol.onol.ExceptionHandler.MemberExceptionType;
 import Onol.onol.Jwt.CustomEmailPasswordAuthToken;
+import Onol.onol.Jwt.JwtFilter;
 import Onol.onol.Jwt.TokenProvider;
 import Onol.onol.Repository.AuthorityRepository;
 import Onol.onol.Repository.MemberRepository;
@@ -27,7 +28,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,7 +44,16 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;;
+    public static final String BEARER_PREFIX = "Bearer ";
+
+    private String resolveToken(String bearerToken) {
+        // bearer : 123123123123123 -> return 123123123123123123
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 
     @Transactional
     public MemberRespDTO signup(MemberReqDTO memberRequestDto) {
@@ -93,7 +105,7 @@ public class AuthService {
         /*
          *  accessToken 은 JWT Filter 에서 검증되고 옴
          * */
-        String originAccessToken = tokenRequestDto.getAccessToken();
+        String originAccessToken = resolveToken(tokenRequestDto.getAccessToken());
         String originRefreshToken = tokenRequestDto.getRefreshToken();
 
         // refreshToken 검증
@@ -140,7 +152,9 @@ public class AuthService {
         return tokenDto;
     }
 
-    public ResponseEntity logout(String accessToken){
+    public ResponseEntity logout(String bearerToken){
+        String accessToken = resolveToken(bearerToken);
+
         String email = tokenProvider.getMemberEmailByToken(accessToken);
         RefreshToken refreshToken = refreshTokenRepository.findByKey(email)
                 .orElseThrow(() -> new BizException(MemberExceptionType.LOGOUT_MEMBER));
@@ -149,11 +163,4 @@ public class AuthService {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    public MemberRespDTO getInfo(String accessToken){
-        String email = tokenProvider.getMemberEmailByToken(accessToken);
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new BizException(MemberExceptionType.NOT_FOUND_USER));
-
-        return MemberRespDTO.of(member);
-    }
 }

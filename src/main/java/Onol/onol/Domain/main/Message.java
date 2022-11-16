@@ -31,16 +31,11 @@ public class Message {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sticker_id")
-    private Sticker sticker;
 
     private String content;
 
-    @Builder
-    public Message(Member member, Sticker sticker, String content) {
+    public Message(Member member, String content) {
         this.member = member;
-        this.sticker = sticker;
         this.content = content;
     }
 }
