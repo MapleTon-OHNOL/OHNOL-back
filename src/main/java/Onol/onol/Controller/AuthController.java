@@ -39,12 +39,12 @@ public class AuthController {
         return authService.logout(bearerToken);
     }
 
-    @PostMapping("/info")
+    @PostMapping("/infoByToken")
     public MemberRespDTO info(@RequestHeader("Authorization") String bearerToken){
         return authService.getInfo(bearerToken);
     }
 
-    @PostMapping("/memberInfo")
+    @PostMapping("/infoByIdentifier")
     public MemberRespDTO infoByIdentifier(@RequestBody MemberIdentifierReqDTO memberIdentifierReqDTO){
         return authService.infoByIdentifier(memberIdentifierReqDTO);
     }
