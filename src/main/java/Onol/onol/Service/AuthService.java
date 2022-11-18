@@ -15,7 +15,6 @@ import Onol.onol.ExceptionHandler.BizException;
 import Onol.onol.ExceptionHandler.JwtExceptionType;
 import Onol.onol.ExceptionHandler.MemberExceptionType;
 import Onol.onol.Jwt.CustomEmailPasswordAuthToken;
-import Onol.onol.Jwt.JwtFilter;
 import Onol.onol.Jwt.TokenProvider;
 import Onol.onol.Repository.AuthorityRepository;
 import Onol.onol.Repository.MemberRepository;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -121,7 +119,7 @@ public class AuthService {
                         .build()
         );
 
-        return tokenProvider.createTokenDTO(accessToken, newRefreshToken);
+        return tokenProvider.createTokenDTO(accessToken, newRefreshToken, member.getIdentifier());
 
     }
 
@@ -166,7 +164,7 @@ public class AuthService {
 
         String newAccessToken = tokenProvider.createAccessToken(email, member.getAuthorities());
         String newRefreshToken = tokenProvider.createRefreshToken(email, member.getAuthorities());
-        TokenDTO tokenDto = tokenProvider.createTokenDTO(newAccessToken, newRefreshToken);
+        TokenDTO tokenDto = tokenProvider.createTokenDTO(newAccessToken, newRefreshToken, member.getIdentifier());
 
         log.debug("refresh Origin = {}",originRefreshToken);
         log.debug("refresh New = {} ",newRefreshToken);

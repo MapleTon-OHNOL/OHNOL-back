@@ -31,8 +31,8 @@ public class MessageService {
 
     @Transactional
     public MessageCreateRespDTO createMessage(String bearerToken, String identifier, MessageReqDTO messageReqDTO) {
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            String memberEmail = tokenProvider.getMemberEmailByToken(bearerToken.substring(7));
+        if (StringUtils.hasText(bearerToken)) {
+            String memberEmail = tokenProvider.getMemberEmailByToken(bearerToken);
 
             Member memberSender = memberRepository.findByEmail(memberEmail).get();
             Member memberFindByIdentifier = memberRepository.findByIdentifier(identifier).get();
@@ -63,12 +63,12 @@ public class MessageService {
     public MessageListRespDTO messages(String bearerToken, String identifier) {
         //            방문한 페이지
         Member memberFindByIdentifier = memberRepository.findByIdentifier(identifier).get();
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            String memberEmail = tokenProvider.getMemberEmailByToken(bearerToken.substring(7));
+        if (StringUtils.hasText(bearerToken)) {
+            String memberEmail = tokenProvider.getMemberEmailByToken(bearerToken);
 //            로그인한사람
             Member memberFindByToken = memberRepository.findByEmail(memberEmail).get();
-
+            System.out.println("memberFindByToken = " + memberFindByToken);
+            System.out.println("memberFindByIdentifier = " + memberFindByIdentifier);
 //            자기 페이지라면
             if (memberFindByIdentifier.getId() == memberFindByToken.getId()) {
 //                25일이후라면
