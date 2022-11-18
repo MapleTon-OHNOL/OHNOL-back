@@ -18,7 +18,7 @@ public class MessageCreateRespDTO {
         this.status = status;
     }
     public static MessageCreateRespDTO of(Member member) {
-        return new MessageCreateRespDTO(1,member.getUsername(), member.getMessageCount());
+        return new MessageCreateRespDTO(2,member.getUsername(), member.getMessageCount());
     }
 
 }
