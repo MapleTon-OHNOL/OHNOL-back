@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("{identifier}")
+@RequestMapping("/u/{identifier}")
 @RequiredArgsConstructor
 public class MessageController {
 

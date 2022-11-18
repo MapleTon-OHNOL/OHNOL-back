@@ -48,10 +48,6 @@ public class Member {
             inverseJoinColumns = {@JoinColumn(name="authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities = new HashSet<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Message> messages = new ArrayList<>();
-
-
     @OneToMany(mappedBy = "memberSender", cascade = CascadeType.ALL)
     private List<Message> sendMessages = new ArrayList<>();
 
