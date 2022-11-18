@@ -48,10 +48,14 @@ public class Member {
             inverseJoinColumns = {@JoinColumn(name="authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities = new HashSet<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Message> messages = new ArrayList<>();
+    @OneToMany(mappedBy = "memberSender", cascade = CascadeType.ALL)
+    private List<Message> sendMessages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "memberReceiver", cascade = CascadeType.ALL)
+    private List<Message> receiveMessages = new ArrayList<>();
 
     private String identifier;
+
 
     @ColumnDefault("0")
     private Integer messageCount = 0;
@@ -97,6 +101,10 @@ public class Member {
 
     public void setIdentifier(String identifier){
         this.identifier = identifier;
+    }
+
+    public void addMessageCount() {
+        this.messageCount += 1;
     }
 
 }

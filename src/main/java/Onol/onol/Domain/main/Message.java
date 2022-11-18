@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,14 +29,18 @@ public class Message {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "member_receiver_id")
+    private Member memberReceiver;
 
+    @ManyToOne
+    @JoinColumn(name = "member_sender_id")
+    private Member memberSender;
 
     private String content;
 
-    public Message(Member member, String content) {
-        this.member = member;
+    public Message(Member memberReceiver, Member memberSender, String content) {
+        this.memberReceiver = memberReceiver;
+        this.memberSender = memberSender;
         this.content = content;
     }
 }

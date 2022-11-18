@@ -20,6 +20,8 @@ public class MemberRepository{
         return em.find(Member.class, member.getId());
     }
 
+
+
     public Optional<Member> findByUsername(String username){
         try {
             Member member = em.
