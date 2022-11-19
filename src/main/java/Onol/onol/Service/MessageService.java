@@ -54,7 +54,7 @@ public class MessageService {
                     memberFindByIdentifier, memberSender);
 //            이미 편지 쓴 이력이 있는 경우
             if (firstByMemberReceiverAndAndMemberSender != null) {
-                return new MessageCreateRespDTO(1);
+                return new MessageCreateRespDTO(1, memberSender.getUsername());
             }
 
             Message message = new Message(memberFindByIdentifier, memberSender, messageReqDTO.getContent());
