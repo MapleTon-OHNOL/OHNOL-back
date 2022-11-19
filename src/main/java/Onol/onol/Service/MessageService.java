@@ -83,7 +83,8 @@ public class MessageService {
 //            자기 페이지라면
             if (memberFindByIdentifier.getId() == memberFindByToken.getId()) {
 //                25일이후라면
-                if (LocalDateTime.now().isAfter(LocalDateTime.now().plus(4, ChronoUnit.MINUTES))){//of(2022, 12, 25, 0, 0))) {
+                //if (LocalDateTime.now().isAfter(LocalDateTime.now().plus(4, ChronoUnit.MINUTES))){//of(2022, 12, 25, 0, 0))) {
+                if (LocalDateTime.now().isAfter(LocalDateTime.of(2022,11,19,18,57))){
                     List<Message> receiveMessages = memberFindByToken.getReceiveMessages();
                     Set<Member> sendMessageToThisMember = receiveMessages.stream()
                             .map(Message::getMemberSender)
